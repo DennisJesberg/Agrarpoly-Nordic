@@ -6,8 +6,26 @@ const path = require("path");
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
+
 const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, "public")));
+
+// Startseite
+app.get("/", (req, res) => {
+  res.sendFile(path.join(publicDir, "index.html"));
+});
+
+// OBS Overlay
+app.get("/overlay.html", (req, res) => {
+  res.sendFile(path.join(publicDir, "overlay.html"));
+});
+
+// Render Health Check
+app.get("/health", (req, res) => {
+  res.status(200).send("AGRARPOLY OK");
+});
+
+
 
 app.get("/health", (req, res) => res.status(200).json({ ok: true, service: "AGRARPOLY" }));
 
