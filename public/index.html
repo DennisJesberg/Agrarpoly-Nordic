@@ -207,6 +207,31 @@ button.gold{
 .shareBtn{width:auto;min-width:170px}
 .joinHint{font-size:13px;color:#999;margin-top:7px;font-weight:700}
 @media(max-width:700px){.shareRow{grid-template-columns:1fr}.shareBtn{width:100%}}
+
+/* ===== V2 MASTER-LAYOUT: 3 SPALTEN + STEUERUNG DIREKT DARUNTER ===== */
+.game{
+  grid-template-columns:minmax(0,.85fr) minmax(0,1.5fr) minmax(0,.85fr) !important;
+  gap:14px !important;
+  align-items:stretch !important;
+}
+.game > .side{min-width:0 !important;}
+.master{margin-top:14px !important;}
+.mastergrid{
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:10px !important;
+  margin-top:0 !important;
+}
+.mastergrid button{font-size:14px !important;}
+@media(max-width:700px){
+  .game{grid-template-columns:1fr 1.6fr 1fr !important;}
+  .mastergrid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
+}
+@media(max-width:500px){
+  .game{grid-template-columns:1fr !important;}
+  .mastergrid{grid-template-columns:1fr !important;}
+}
+
 </style>
 </head>
 <body><div class="wrap">
