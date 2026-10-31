@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AGRARPOLY – Spieler</title><style>
+:root{--red:#e5092f;--red2:#ff2b45;--black:#070707;--gray:#252525;--light:#f4f4f4;--muted:#aaa;--green:#8cff00}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:#050505;color:#fff}
+body{background:radial-gradient(circle at 50% 35%,#24080d 0,#090909 42%,#030303 100%);overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;background-image:linear-gradient(135deg,transparent 0 48%,#fff 49% 50%,transparent 51%);background-size:90px 90px}
+.wrap{width:min(1500px,96vw);margin:0 auto;padding:18px 0 28px;position:relative;z-index:1}
+.top{display:grid;grid-template-columns:180px 1fr 220px;align-items:center;gap:14px;min-height:170px}
+.logo{max-width:180px;max-height:150px;object-fit:contain;filter:drop-shadow(0 0 15px #e5092f55)}
+.jesberg{max-width:220px;max-height:150px;justify-self:end;object-fit:contain;mix-blend-mode:screen;filter:drop-shadow(0 0 16px #7dff003d)}
+.title{text-align:center;font-size:clamp(48px,6vw,92px);font-weight:1000;letter-spacing:4px;line-height:.85;color:#fff;text-shadow:0 4px 0 #111,0 0 18px #e5092f,5px 8px 0 #b4001f;transform:skew(-5deg)}
+.title small{display:block;font-size:clamp(18px,2vw,30px);letter-spacing:9px;color:#ddd;margin-top:14px;text-shadow:none}
+.creator{text-align:right;color:#fff;font-weight:1000;font-size:18px;font-style:italic;letter-spacing:2px;margin-bottom:-12px;text-shadow:0 0 8px #7dff00}
+.panel{background:linear-gradient(145deg,#151515dd,#050505f2);border:2px solid #4a4a4a;border-radius:18px;box-shadow:0 0 0 1px #000,0 0 28px #e5092f25;padding:22px}
+.panel.red{border-color:#b70b28;box-shadow:0 0 24px #e5092f22}
+.home{max-width:780px;margin:10px auto}
+label{display:block;color:#bbb;font-weight:800;margin:0 0 7px}
+input,button{width:100%;padding:15px 17px;border-radius:10px;border:2px solid #3a3a3a;background:#090909;color:#fff;font-size:17px;font-weight:800;outline:none}
+input:focus{border-color:var(--red)}
+button{cursor:pointer;background:linear-gradient(#222,#0b0b0b);transition:.15s;box-shadow:inset 0 1px #555}
+button:hover:not(:disabled){transform:translateY(-1px);filter:brightness(1.12)}
+button:disabled{opacity:.4;cursor:not-allowed}
+button.red{background:linear-gradient(#ef173b,#9c001e);border-color:#ff4962;box-shadow:0 0 16px #e5092f44}
+button.gold{background:#b88b12;color:#fff;border:1px solid #e0bb4f}
+.blue{background:linear-gradient(#426fd5,#183477)}
+button.gray{background:linear-gradient(#555,#222)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.row.three{grid-template-columns:repeat(3,1fr)}
+.error{color:#ff5872;font-weight:800;min-height:24px}.hide{display:none!important}
+.game{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:18px;align-items:stretch}
+.side{min-height:430px;display:flex;flex-direction:column;justify-content:space-between}.side h2,.master h2{margin:0 0 14px;font-size:21px;letter-spacing:2px}
+.playerbox{border:2px solid #333;border-radius:14px;padding:18px;background:#0b0b0b;box-shadow:inset 0 0 20px #000}
+.playerbox.current{border-color:var(--red);box-shadow:0 0 22px #e5092f33,inset 0 0 20px #190308}
+.playername{font-size:clamp(24px,2.4vw,36px);font-weight:1000;word-break:break-word}.label{font-size:13px;color:#aaa;letter-spacing:2px;font-weight:900;margin-bottom:7px}
+.center{min-height:430px;display:flex;flex-direction:column;justify-content:center;text-align:center;position:relative;overflow:hidden}
+.center:before{content:"";position:absolute;width:440px;height:440px;left:50%;top:50%;transform:translate(-50%,-48%);background:radial-gradient(circle,#ef173b2e 0,#ef173b12 38%,transparent 70%);pointer-events:none}
+.status{position:relative;font-size:28px;font-weight:1000;margin-bottom:10px}.status.red{color:#ff3c58}.status.wait{color:#aaa}.you{font-size:18px;color:#bbb;margin-bottom:12px}
+.die{position:relative;width:210px;height:210px;margin:12px auto 20px;border-radius:28px;background:linear-gradient(145deg,#fff,#bfc2c5);color:#090909;display:flex;align-items:center;justify-content:center;font-size:122px;box-shadow:0 12px 0 #555,0 0 38px #e5092f66, inset -12px -15px 25px #888;transform:rotate(-7deg);text-shadow:2px 3px 0 #fff}
+.rollAnim{animation:rollStop .65s ease-out}@keyframes rollStop{0%{transform:rotate(-18deg) scale(.7);filter:blur(5px);opacity:.2}45%{transform:rotate(8deg) scale(1.15);filter:blur(1px);opacity:1}100%{transform:rotate(0deg) scale(1);filter:blur(0)}}
+.roll{position:relative;max-width:420px;margin:0 auto;font-size:24px;padding:18px}.roll:disabled{background:linear-gradient(#555,#262626);border-color:#666}
+.master{margin-top:18px}.mastergrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.mastergrid button{font-size:14px}
+.me{margin-top:14px;color:#bbb;text-align:center}.me b{color:#fff}.nextArrow{font-size:30px;color:#aaa;margin:8px 0}
+.eventCard{position:relative;max-width:520px;margin:14px auto 0;padding:16px 20px;border:2px solid #c9a227;border-radius:14px;background:linear-gradient(145deg,#15110a,#070707);box-shadow:0 0 22px #c9a22735,inset 0 0 18px #000;transform:translateY(12px) scale(.96);opacity:0;transition:.25s}.eventCard.show{transform:translateY(0) scale(1);opacity:1}.eventCard.locked{border-color:#777;filter:grayscale(.35);background:linear-gradient(145deg,#222,#080808)}.eventLabel{font-size:12px;letter-spacing:3px;color:#c9a227;font-weight:1000}.eventTitle{font-size:24px;font-weight:1000;margin-top:4px;color:#fff}.eventText{font-size:15px;color:#ddd;margin-top:5px}.eventEffect{font-size:14px;font-weight:900;margin-top:8px;color:#ffcf4a}.eventChoices{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:14px}.eventChoice{min-height:92px;padding:10px;border:2px solid #777;border-radius:10px;background:linear-gradient(145deg,#262626,#0b0b0b);color:#fff;text-align:left;cursor:pointer;transition:.18s;box-shadow:inset 0 0 12px #000}.eventChoice:hover{transform:translateY(-3px) scale(1.02);border-color:#e51b3e;box-shadow:0 0 15px #e51b3e55}.eventChoice strong{display:block;font-size:14px;color:#fff}.eventChoice span{display:block;margin-top:5px;font-size:11px;color:#bbb;line-height:1.2}.eventChoice:disabled{opacity:.55;cursor:default;transform:none}.eventPickTitle{font-size:13px;letter-spacing:1px;color:#ffcf4a;font-weight:1000;margin-top:10px}@media(max-width:1050px){.eventChoices{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:1050px){.game{grid-template-columns:1fr}.top{grid-template-columns:100px 1fr 130px}.logo{max-width:100px}.jesberg{max-width:130px}.side{min-height:unset}.mastergrid{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.row,.row.three{grid-template-columns:1fr}.top{grid-template-columns:70px 1fr 90px;min-height:100px}.logo{max-width:70px}.jesberg{max-width:90px}.title{font-size:32px}.title small{font-size:11px;letter-spacing:4px}.die{width:160px;height:160px;font-size:90px}}
+
+.eventChoices{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:14px}.eventChoice{min-height:72px;border:2px solid #9d0b24;border-radius:10px;background:linear-gradient(145deg,#090909,#2a090e);color:#fff;cursor:pointer;box-shadow:0 0 10px #e5092f35;position:relative;overflow:hidden}.eventChoice:before{content:"?";display:block;font-size:30px;font-weight:1000;color:#c9a227;line-height:1}.eventChoice span{display:block;font-size:10px;color:#aaa;margin-top:3px}.eventChoice:hover{transform:translateY(-2px);box-shadow:0 0 16px #e5092f88;border-color:#ff304f}.eventReveal{grid-column:1/-1;padding:18px;border:2px solid #c9a227;border-radius:14px;background:linear-gradient(145deg,#17110a,#070707);box-shadow:0 0 24px #c9a22755}.eventReveal .big{font-size:30px;font-weight:1000;color:#ffd45b}.eventReveal .desc{font-size:16px;color:#eee;margin-top:8px}.eventWaiting{grid-column:1/-1;color:#bbb;font-weight:800;padding:12px}.mastergrid button:disabled{opacity:.35;cursor:not-allowed}.masterCards{margin-top:16px;padding:14px;border:1px solid #e51b3e;border-radius:14px;background:#080808;box-shadow:inset 0 0 20px #000}.masterCards h3{margin:0 0 10px;color:#ffcf4a;font-size:15px;letter-spacing:1px}.masterCardGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.masterCardItem{min-height:82px;padding:8px;border:1px solid #6d1727;border-radius:8px;background:linear-gradient(145deg,#1a0a0d,#080808)}.masterCardItem .slot{font-size:10px;color:#888;font-weight:900}.masterCardItem strong{display:block;color:#fff;font-size:12px;margin-top:3px}.masterCardItem span{display:block;color:#aaa;font-size:10px;line-height:1.15;margin-top:3px}.masterCardItem.selected{border-color:#ffd45b;box-shadow:0 0 12px #ffd45b55}.masterCardItem .value{color:#ffcf4a;font-weight:900;margin-top:4px}
+
+/* ===== AGRARPOLY PC DESIGN – based on the supplied overview banner ===== */
+:root{
+  --red:#e5092f;--red2:#ff304f;--black:#030303;--panel:#0b0b0b;
+  --gold:#ffd45b;--steel:#b9bec5;--green:#79ff00;
+}
+body{
+  background:
+    radial-gradient(circle at 50% 0%,rgba(150,0,15,.32),transparent 38%),
+    radial-gradient(circle at 50% 55%,rgba(80,0,8,.18),transparent 55%),
+    #020202;
+}
+body:before{
+  opacity:.08;
+  background-image:linear-gradient(135deg,transparent 0 48%,#fff 49% 50%,transparent 51%);
+  background-size:120px 120px;
+}
+.wrap{width:min(1680px,98vw);padding:8px 0 34px}
+.heroBanner{
+  position:relative;width:100%;margin:0 auto 12px;
+  height:clamp(280px,31vw,500px);max-height:500px;overflow:hidden;
+}
+.heroImage{
+  display:block;width:100%;height:100%;object-fit:cover;object-position:top center;
+  filter:drop-shadow(0 0 18px rgba(229,9,47,.24));
+}
+.heroPlayer{
+  position:absolute;top:67.5%;width:20.8%;height:12%;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+.heroCurrent{left:2.0%}
+.heroNext{right:2.0%}
+.heroPlayerName{
+  width:78%;text-align:center;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:clamp(18px,1.9vw,38px);
+  line-height:1;font-weight:1000;
+  color:#fff;text-shadow:0 3px 0 #000,0 0 10px #000;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.panel{
+  background:
+    linear-gradient(145deg,rgba(25,25,25,.97),rgba(3,3,3,.98)),
+    radial-gradient(circle at 50% 0%,rgba(255,30,55,.12),transparent 55%);
+  border:2px solid #3f3f3f;border-radius:12px;
+  box-shadow:0 0 0 1px #000,0 10px 35px rgba(0,0,0,.7),0 0 28px rgba(229,9,47,.14);
+}
+.panel.red{
+  border-color:#a70b27;
+  box-shadow:0 0 0 1px #000,0 0 24px rgba(229,9,47,.2),inset 0 0 35px rgba(100,0,10,.08);
+}
+.home{
+  max-width:1080px;margin:0 auto;padding:28px 34px;
+}
+.home h2,.master h2{
+  font-size:clamp(22px,2vw,32px);
+  letter-spacing:2px;text-transform:uppercase;
+  text-shadow:0 2px 0 #000,0 0 12px rgba(229,9,47,.35);
+}
+input,button{
+  border-radius:7px;border-color:#4a4a4a;
+  background:linear-gradient(#1b1b1b,#070707);
+  box-shadow:inset 0 1px rgba(255,255,255,.12),0 4px 12px rgba(0,0,0,.45);
+}
+button.red{
+  background:linear-gradient(#ef173b,#900019);
+  border-color:#ff3c58;
+  box-shadow:0 0 16px rgba(229,9,47,.24),inset 0 1px rgba(255,255,255,.2);
+}
+button.gold{
+  background:linear-gradient(#c99c25,#765408);
+  border-color:#f3ca54;
+}
+.game{
+  grid-template-columns:minmax(240px,.85fr) minmax(480px,1.5fr) minmax(240px,.85fr);
+  gap:14px;
+}
+.side,.center{min-height:500px}
+.side{
+  background:
+    linear-gradient(160deg,#141414,#050505);
+  border-color:#4b4b4b;
+  padding:22px;
+}
+.side:first-child{border-color:#8b0b25}
+.playerbox{
+  border-color:#3e3e3e;
+  background:linear-gradient(145deg,#171717,#060606);
+}
+.playerbox.current{
+  border-color:#d30e31;
+  box-shadow:0 0 20px rgba(229,9,47,.25),inset 0 0 20px #190308;
+}
+.center{
+  background:
+    radial-gradient(circle at 50% 40%,rgba(229,9,47,.13),transparent 38%),
+    linear-gradient(145deg,#101010,#030303);
+  border-color:#b00d2a;
+}
+.center .status{
+  font-size:clamp(22px,2vw,34px);
+  text-transform:uppercase;
+  letter-spacing:2px;
+}
+.die{
+  width:230px;height:230px;border-radius:32px;
+  background:linear-gradient(145deg,#fff,#c9cdd0);
+  box-shadow:0 14px 0 #555,0 0 40px rgba(229,9,47,.45),inset -12px -15px 25px #888;
+}
+.roll{
+  max-width:440px;
+  font-size:26px;
+  border-radius:9px;
+  text-transform:uppercase;
+  letter-spacing:2px;
+}
+.eventCard{
+  max-width:760px;
+  border-color:#b70c29;
+  background:linear-gradient(145deg,#19090d,#050505);
+}
+.eventChoices{grid-template-columns:repeat(5,minmax(0,1fr))}
+.eventChoice{
+  min-height:82px;
+  border-color:#7d1226;
+  background:linear-gradient(145deg,#1a0a0d,#050505);
+}
+.master{
+  margin-top:14px;
+  padding:22px;
+}
+.mastergrid{grid-template-columns:repeat(4,1fr)}
+.masterCards{background:linear-gradient(145deg,#12070a,#050505)}
+.masterCardGrid{grid-template-columns:repeat(5,1fr)}
+
+@media(max-width:1050px){
+  .heroBanner{height:clamp(220px,34vw,380px)}
+  .heroPlayer{top:66%;height:12%}
+  .game{grid-template-columns:1fr}
+  .side,.center{min-height:unset}
+  .mastergrid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:620px){
+  .heroBanner{height:clamp(180px,48vw,300px);margin-bottom:8px}
+  .heroPlayerName{font-size:14px}
+  .home{padding:18px}
+  .die{width:170px;height:170px;font-size:95px}
+  .mastergrid{grid-template-columns:1fr}
+}
+
+
+.shareBox{margin:0 0 16px;padding:14px 16px;border:2px solid #8d0b24;border-radius:12px;background:linear-gradient(145deg,#16070a,#050505);box-shadow:inset 0 0 18px #000,0 0 18px #e5092f18}
+.shareTitle{font-size:12px;color:#aaa;font-weight:1000;letter-spacing:2px;margin-bottom:7px}
+.shareRow{display:grid;grid-template-columns:1fr auto auto;gap:9px;align-items:center}
+.shareInput{font-size:14px!important;color:#ddd!important;letter-spacing:0!important;font-weight:700!important}
+.shareBtn{width:auto;min-width:170px}
+.joinHint{font-size:13px;color:#999;margin-top:7px;font-weight:700}
+@media(max-width:700px){.shareRow{grid-template-columns:1fr}.shareBtn{width:100%}}
+
+/* V2 event card layout */
+.eventChoices{display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:16px;margin-top:18px;width:100%}
+.eventChoice{min-height:112px;padding:12px 10px;border:2px solid #9d0b24;border-radius:12px;background:linear-gradient(145deg,#090909,#2a090e);color:#fff;cursor:pointer;box-shadow:0 0 12px #e5092f35;position:relative;overflow:hidden;text-align:center}
+.eventChoice:before{content:"AGRARPOLY";display:block;font-size:18px;font-weight:1000;letter-spacing:1px;color:#ffd45b;line-height:1.2;margin-top:10px;text-shadow:0 0 8px #e5092f}
+.eventChoice span{display:block;font-size:10px;color:#aaa;margin-top:8px}.eventChoice:hover{transform:translateY(-3px);box-shadow:0 0 20px #e5092f88;border-color:#ff304f}
+@media(max-width:1150px){.eventChoices{grid-template-columns:repeat(4,minmax(135px,1fr));gap:14px}}
+@media(max-width:800px){.eventChoices{grid-template-columns:repeat(3,minmax(110px,1fr));gap:12px}.eventChoice{min-height:100px}}
+@media(max-width:560px){.eventChoices{grid-template-columns:repeat(2,minmax(120px,1fr));gap:10px}}
+
+.playerPage{max-width:1680px;margin:auto}
+.playerJoin{max-width:720px;margin:30px auto}
+.playerJoin h2{text-align:center;font-size:28px;letter-spacing:2px}
+.playerJoin .sub{color:#aaa;text-align:center;margin-bottom:18px}
+.playerGame{display:none}
+.playerGame.show{display:block}
+.joinStatus{margin-top:12px;color:#ff5872;font-weight:900;min-height:24px;text-align:center}
+.playerTop{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:18px;align-items:stretch}
+@media(max-width:1050px){.playerTop{grid-template-columns:1fr}}
+</style></head><body><div class="wrap playerPage">
+<header class="heroBanner"><img src="/assets/agrarpoly_header.png" class="heroImage" alt="AGRARPOLY"><div class="heroPlayer heroCurrent"><div class="heroPlayerName" id="heroCurrentName">–</div></div><div class="heroPlayer heroNext"><div class="heroPlayerName" id="heroNextName">–</div></div></header>
+<section id="joinPanel" class="panel red home playerJoin">
+<h2>🎮 SPIEL BEITRETEN</h2><div class="sub">Du bist auf dem Spielerlink. Der Spielcode wurde automatisch übernommen.</div>
+<label>Spielcode</label><input id="joinCode" readonly placeholder="Spielcode"><label style="margin-top:14px">Dein Name</label><input id="playerName" placeholder="Dein Spielername" maxlength="30"><button class="red" style="margin-top:14px" onclick="joinGame()">🎮 BEITRETEN</button><div id="joinStatus" class="joinStatus"></div>
+</section>
+<section id="game" class="playerGame">
+<div class="game">
+<aside class="panel side"><div><div class="label">DEIN SPIELER</div><div id="myName" class="playername">–</div></div><div class="playerbox"><div class="label">STATUS</div><div id="myStatus" style="font-size:21px;font-weight:900">Warte auf das Spiel…</div></div></aside>
+<main class="panel red center"><div id="status" class="status wait">Warte auf Spielstart…</div><div id="you" class="you">Der Master steuert die Freigabe.</div><div id="die" class="die">–</div><button id="rollBtn" class="roll red" onclick="roll()" disabled>WÜRFELN</button><div id="eventCard" class="eventCard"><div class="eventLabel">EREIGNISKARTEN</div><div id="eventTitle" class="eventTitle">–</div><div id="eventText" class="eventText">Der Master entscheidet, ob du die Karten sehen darfst.</div><div id="eventEffect" class="eventEffect"></div><div id="eventChoices" class="eventChoices"></div></div></main>
+<aside class="panel side"><div><div class="label">NÄCHSTER SPIELER</div><div id="nextName" class="playername">–</div></div><div class="playerbox"><div class="label">AKTUELLER SPIELER</div><div id="currentName" style="font-size:25px;font-weight:1000">–</div><div class="nextArrow">↓</div><div class="label">DANACH</div><div id="nextSmall" style="font-size:21px;font-weight:900">–</div></div></aside>
+</div></section></div>
+<script src="/socket.io/socket.io.js"></script><script>
+const s=io();let myId=null,lastShown=null,joined=false;const faces=["","1","2","3","4","5","6"];
+const params=new URLSearchParams(location.search);const inviteCode=(params.get('code')||'').trim().toUpperCase();document.getElementById('joinCode').value=inviteCode;
+function joinGame(){const code=document.getElementById('joinCode').value.trim();const name=document.getElementById('playerName').value.trim();if(!code)return setJoinStatus('Kein Spielcode vorhanden.');if(!name)return setJoinStatus('Bitte deinen Namen eingeben.');s.emit('join',{code,name})}
+function setJoinStatus(t){document.getElementById('joinStatus').textContent=t||''}
+function roll(){s.emit('roll')}
+function claimEvent(slot){s.emit('claimEvent',{slot})}
+s.on('joined',d=>{myId=d.playerId;joined=true;document.getElementById('joinPanel').style.display='none';document.getElementById('game').classList.add('show');setJoinStatus('')})
+s.on('errorMsg',m=>setJoinStatus(m))
+s.on('state',st=>{
+ if(!joined)return;const current=st.players[st.currentPlayer],next=st.players[st.currentPlayer+1],mine=st.players.find(p=>p.id===myId),isMine=current?.id===myId;
+ document.getElementById('myName').textContent=mine?.name||'–';document.getElementById('currentName').textContent=current?.name||'–';document.getElementById('nextName').textContent=next?.name||'–';document.getElementById('nextSmall').textContent=next?.name||'–';document.getElementById('heroCurrentName').textContent=current?.name||'–';document.getElementById('heroNextName').textContent=next?.name||'–';
+ const canRoll=!!(isMine&&st.started&&st.released&&!mine?.rolled&&!st.event);const rb=document.getElementById('rollBtn');rb.disabled=!canRoll;rb.textContent=canRoll?'🎲 WÜRFELN':(isMine?'⏳ WARTE':'🎲 WÜRFELN');
+ const shown=mine?.last||null,die=document.getElementById('die');if(shown&&shown!==lastShown){die.classList.remove('rollAnim');void die.offsetWidth;die.classList.add('rollAnim');lastShown=shown}die.textContent=shown?faces[shown]:'–';
+ document.getElementById('status').textContent=!st.started?'Warte auf Spielstart…':(st.event?'EREIGNISKARTEN AUSWAHL':(st.released?(isMine?'DU BIST DRAN':'WÜRFEL FREIGEGEBEN'):'Warte auf Freigabe…'));document.getElementById('status').className='status '+(st.released?'red':'wait');
+ document.getElementById('you').textContent=isMine?(st.event?(st.event.accessGranted?'Wähle eine verdeckte Ereigniskarte.':'Ereigniskarten sind noch nicht freigegeben.'):(st.released?'Du darfst würfeln!':'Du bist dran – warte auf die Freigabe.')):'Der Master steuert die Freigabe.';
+ document.getElementById('myStatus').textContent=isMine?(st.event?(st.event.accessGranted?'KARTE AUSWÄHLEN':'WARTE AUF KARTENFREIGABE'):(st.released?'WÜRFELN FREIGEGEBEN':'WARTE AUF FREIGABE')):'Warte auf deinen Zug…';
+ renderCards(st,isMine);
+});
+function renderCards(st,isMine){const card=document.getElementById('eventCard'),title=document.getElementById('eventTitle'),text=document.getElementById('eventText'),effect=document.getElementById('eventEffect'),choices=document.getElementById('eventChoices');choices.innerHTML='';if(!st.event||!isMine||!st.event.accessGranted){card.classList.remove('show');return}card.classList.add('show');title.textContent=st.event.revealedSlot===null?'WÄHLE EINE VON 20 KARTEN':'EREIGNISKARTE AUFGEDECKT';text.textContent=st.event.revealedSlot===null?'Wähle eine Karte. Nur diese Karte wird aufgedeckt.':(st.event.revealedCard?.title||'');effect.textContent=st.event.revealedSlot===null?'Nur die gewählte Karte wird aufgedeckt.':'Nur aufgedeckt – kein automatischer Karteneffekt.';const grid=document.createElement('div');grid.className='eventChoices';(st.event.cards||[]).forEach(c=>{const b=document.createElement('button');b.className='eventChoice';b.type='button';b.disabled=st.event.revealedSlot!==null||c.revealed;b.setAttribute('aria-label','Ereigniskarte '+(c.slot+1));if(c.revealed){b.innerHTML='<strong>'+escapeHtml(c.title)+'</strong><span>'+escapeHtml(c.text)+'</span>'}else{b.innerHTML='<span>PLATZ '+(c.slot+1)+'</span>';b.onclick=()=>claimEvent(c.slot)}grid.appendChild(b)});choices.appendChild(grid)}
+function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+if(inviteCode)document.getElementById('playerName').focus();
+</script></body></html>
